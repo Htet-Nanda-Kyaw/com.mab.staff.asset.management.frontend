@@ -1,0 +1,26 @@
+<div class="login-container">
+    <div class="login-box">
+        <div class="logo-section">
+            <img src="assets/imgs/mab-logo.png" alt="MAB Login Logo" class="logo" />
+        </div>
+        <h2 class="sign-in-title">Sign In</h2>
+        <!-- Error message for login failure -->
+        <p *ngIf="loginError" class="error-message">{{ loginError }}</p>
+        <form (ngSubmit)="onLogin()" class="login-form" #loginForm="ngForm">
+            <div class="input-group">
+                <i class="input-icon user-icon"></i>
+                <input type="text" placeholder="User ID" [(ngModel)]="username" name="username" required
+                    #usernameField="ngModel" class="login-input" />
+            </div>
+            <div class="input-group">
+                <i class="input-icon password-icon"></i>
+                <input type="password" placeholder="Password" [(ngModel)]="password" name="password" required
+                    #passwordField="ngModel" class="login-input" />
+            </div>
+            <button type="submit" class="login-button">
+                Sign In
+            </button>
+        </form>
+        <a href="#" class="forgot-password">Forgot Your Password?</a>
+    </div>
+</div>

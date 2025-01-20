@@ -1,0 +1,109 @@
+<div class="asset-assign-page">
+    <!-- Radio Buttons -->
+    <div>
+        <label *ngFor="let category of categories">
+            <input type="radio" [value]="category.categoryName" (change)="updateForm(category.categoryName)"
+                name="category" />
+            {{ category.categoryName }}
+        </label>
+    </div>
+
+    <!-- Dynamic Form -->
+    <div *ngIf="selectedCategory">
+        <form>
+            <div>
+                <label>Asset</label>
+                <select [(ngModel)]="formData.selectedAsset" name="selectedAsset"
+                    (change)="onAssetChange(formData.selectedAsset)">
+                    <option value="">None</option>
+                    <option *ngFor="let asset of assets" [value]="asset.value">
+                        {{ asset.label }}
+                    </option>
+                </select>
+            </div>
+
+            <!-- Dynamic Fields -->
+            <div *ngIf="formData.assetDetails">
+                <div *ngFor="let key of objectKeys(formData.assetDetails)">
+                    <p><strong>{{ key | titlecase }}:</strong> {{ formData.assetDetails[key] }}</p>
+                </div>
+            </div>
+
+            <div>
+                <label>MAB Asset ID</label>
+                <input type="text" [(ngModel)]="formData.mabAssetId" name="mabAssetId" />
+            </div>
+            <div>
+                <label>Asset Serial No</label>
+                <input type="text" [(ngModel)]="formData.assetSerialNo" name="assetSerialNo" />
+            </div>
+            <div>
+                <label>Wifi Access</label>
+                <select [(ngModel)]="formData.wifiAccess" name="wifiAccess">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            <div>
+                <label>GP Access</label>
+                <select [(ngModel)]="formData.gpAccess" name="gpAccess">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            <div>
+                <label>Remarks</label>
+                <textarea [(ngModel)]="formData.remarks" name="remarks"></textarea>
+            </div>
+            <button type="button" (click)="addToList()">Add to List</button>
+        </form>
+    </div>
+
+    <!-- Temporary List -->
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>MAB Asset ID</th>
+                    <th>Asset Serial No</th>
+                    <th>Wifi Access</th>
+                    <th>GP Access</th>
+                    <!-- Dynamically generate consistent columns for asset details -->
+                    <th *ngFor="let key of masterDetailKeys">
+                        {{ key | titlecase }}
+                    </th>
+                    <th>Remarks</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of tempList; let i = index">
+                    <td>
+                        <input type="text" [(ngModel)]="item.mabAssetId" name="mabAssetId_{{ i }}" />
+                    </td>
+                    <td>
+                        <input type="text" [(ngModel)]="item.assetSerialNo" name="assetSerialNo_{{ i }}" />
+                    </td>
+                    <td>{{ item.wifiAccess }}</td>
+                    <td>{{ item.gpAccess }}</td>
+
+                    <!-- Render all columns consistently -->
+                    <td *ngFor="let key of masterDetailKeys">
+                        {{ item.assetDetails?.[key] || '' }}
+                    </td>
+
+                    <td>
+                        <input type="text" [(ngModel)]="item.remarks" name="remarks_{{ i }}" />
+                    </td>
+
+                    <td>
+                        <button type="button" (click)="removeFromList(i)">Remove</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <button type="button" (click)="saveAssets()">Save</button>
+</div>
