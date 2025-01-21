@@ -19,7 +19,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { AssetAssignComponent } from './asset-assign/asset-assign.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ExportPageComponent } from './export-page/export-page.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +34,7 @@ import { AssetAssignComponent } from './asset-assign/asset-assign.component';
     HeaderComponent,
     GeneralPopupComponent,
     AssetAssignComponent,
+    ExportPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -43,6 +47,8 @@ import { AssetAssignComponent } from './asset-assign/asset-assign.component';
     MatCheckboxModule,
     MatButtonModule,
     MatTableModule,
+    MatPaginatorModule,
+    ReactiveFormsModule,
   ],
   providers: [
     provideClientHydration(withEventReplay()),

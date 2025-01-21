@@ -7,6 +7,10 @@ import { environment } from '../../environments/environement';
   providedIn: 'root'
 })
 export class AssetService {
+  getAssignedAssets(): Observable<any> {
+    const endPoint = '/asset/search';
+    return this.apiService.get(endPoint,true);
+  }
   saveAssignedAssets(payload: any): Observable<any> {
     const endPoint = environment.saveAssets;
     return this.apiService.post(endPoint,payload,true);

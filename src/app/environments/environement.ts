@@ -4,4 +4,12 @@ export const environment = {
     profileURL: '/user/profile',
     getAllRefCategories: '/ref_asset_category/search_all',
     saveAssets: '/asset/save',
+    getAllRefLaptops: '/ref_laptop/search_all',
+    getAllRefMonitors: '/ref_external_monitor/search_all',
+    getAllRefHDD: '/ref_hard_disk/search_all',
+    getAllRefPrinters:'/ref_printer/search_all',
+    getAllRefScanners:'/ref_scanner/search_all',
+    getAllRefUPS:'/ref_ups/search_all',
+    updatePassword: '/user/update_password',
+    getAllAssets:'/asset/search_all',
 }

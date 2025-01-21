@@ -1,83 +1,92 @@
 <div class="asset-assign-page">
     <!-- Radio Buttons -->
-    <div>
-        <label *ngFor="let category of categories">
+    <div class="radio-buttons">
+        <div *ngFor="let category of categories" class="radio-item">
             <input type="radio" [value]="category.categoryName" (change)="updateForm(category.categoryName)"
                 name="category" />
-            {{ category.categoryName }}
-        </label>
+            <label>{{ category.categoryName }}</label>
+        </div>
     </div>
 
     <!-- Dynamic Form -->
     <div *ngIf="selectedCategory">
-        <form>
-            <div>
+        <form class="form-container">
+            <!-- Asset Dropdown -->
+            <div class="form-row full-row">
                 <label>Asset</label>
                 <select [(ngModel)]="formData.selectedAsset" name="selectedAsset"
                     (change)="onAssetChange(formData.selectedAsset)">
                     <option value="">None</option>
-                    <option *ngFor="let asset of assets" [value]="asset.value">
-                        {{ asset.label }}
-                    </option>
+                    <option *ngFor="let asset of assets" [value]="asset.value">{{ asset.label }}</option>
                 </select>
             </div>
 
-            <!-- Dynamic Fields -->
-            <div *ngIf="formData.assetDetails">
-                <div *ngFor="let key of objectKeys(formData.assetDetails)">
-                    <p><strong>{{ key | titlecase }}:</strong> {{ formData.assetDetails[key] }}</p>
+            <!-- Dynamic Fields Section -->
+            <div *ngIf="formData.assetDetails" class="form-row dynamic-fields">
+                <div *ngFor="let key of objectKeys(formData.assetDetails)" class="dynamic-field">
+                    <label><strong>{{ key | titlecase }}</strong></label>
+                    <span>{{ formData.assetDetails[key] }}</span>
                 </div>
             </div>
 
-            <div>
-                <label>MAB Asset ID</label>
-                <input type="text" [(ngModel)]="formData.mabAssetId" name="mabAssetId" />
+            <!-- Dynamic Fields Row -->
+            <div class="form-row single-row">
+                <div class="field-group">
+                    <label>MAB Asset ID</label>
+                    <input type="text" [(ngModel)]="formData.mabAssetId" name="mabAssetId" />
+                </div>
+                <div class="field-group">
+                    <label>Asset Serial No</label>
+                    <input type="text" [(ngModel)]="formData.assetSerialNo" name="assetSerialNo" />
+                </div>
+                <div class="field-group">
+                    <label>Wifi Access</label>
+                    <select [(ngModel)]="formData.wifiAccess" name="wifiAccess">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+                <div class="field-group">
+                    <label>GP Access</label>
+                    <select [(ngModel)]="formData.gpAccess" name="gpAccess">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+
+
+                <!-- Remarks Row -->
+                <div class="field-group">
+                    <label>Remarks</label>
+                    <textarea [(ngModel)]="formData.remarks" name="remarks"></textarea>
+                </div>
             </div>
-            <div>
-                <label>Asset Serial No</label>
-                <input type="text" [(ngModel)]="formData.assetSerialNo" name="assetSerialNo" />
+
+            <!-- Add to List Button -->
+            <div class="add-to-list-button">
+                <button type="button" (click)="addToList()">Add to List</button>
             </div>
-            <div>
-                <label>Wifi Access</label>
-                <select [(ngModel)]="formData.wifiAccess" name="wifiAccess">
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                </select>
-            </div>
-            <div>
-                <label>GP Access</label>
-                <select [(ngModel)]="formData.gpAccess" name="gpAccess">
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                </select>
-            </div>
-            <div>
-                <label>Remarks</label>
-                <textarea [(ngModel)]="formData.remarks" name="remarks"></textarea>
-            </div>
-            <button type="button" (click)="addToList()">Add to List</button>
         </form>
     </div>
 
     <!-- Temporary List -->
-    <div>
+    <div class="table-wrapper">
         <table>
             <thead>
                 <tr>
+                    <th>Category</th>
                     <th>MAB Asset ID</th>
                     <th>Asset Serial No</th>
                     <th>Wifi Access</th>
                     <th>GP Access</th>
-                    <!-- Dynamically generate consistent columns for asset details -->
-                    <th *ngFor="let key of masterDetailKeys">
-                        {{ key | titlecase }}
-                    </th>
+                    <th *ngFor="let key of masterDetailKeys">{{ key | titlecase }}</th>
                     <th>Remarks</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let item of tempList; let i = index">
+                    <td>{{ item.categoryName }}</td>
                     <td>
                         <input type="text" [(ngModel)]="item.mabAssetId" name="mabAssetId_{{ i }}" />
                     </td>
@@ -86,16 +95,13 @@
                     </td>
                     <td>{{ item.wifiAccess }}</td>
                     <td>{{ item.gpAccess }}</td>
-
                     <!-- Render all columns consistently -->
                     <td *ngFor="let key of masterDetailKeys">
                         {{ item.assetDetails?.[key] || '' }}
                     </td>
-
                     <td>
                         <input type="text" [(ngModel)]="item.remarks" name="remarks_{{ i }}" />
                     </td>
-
                     <td>
                         <button type="button" (click)="removeFromList(i)">Remove</button>
                     </td>
@@ -104,6 +110,8 @@
         </table>
     </div>
 
-
-    <button type="button" (click)="saveAssets()">Save</button>
+    <!-- Save Button -->
+    <div class="save-button">
+        <button type="button" (click)="saveAssets()">Save</button>
+    </div>
 </div>

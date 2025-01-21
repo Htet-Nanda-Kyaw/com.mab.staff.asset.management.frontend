@@ -14,4 +14,9 @@ export class ProfileService {
     const endPoint = environment.profileURL;
     return this.apiService.get(endPoint);
   }
+  updatePassword(data: any): Observable<any> {
+    const endPoint = environment.updatePassword;
+      console.log(data);
+      return this.apiService.post(endPoint,data,true);
+    }
 }
