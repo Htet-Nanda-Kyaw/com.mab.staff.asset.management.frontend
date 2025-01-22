@@ -1,5 +1,5 @@
 export const environment = {
-    baseURL: 'http://localhost:8080/api',
+    baseURL: 'http://172.30.10.90:7505/asm-service/api',
     loginURL: '/auth/login',
     profileURL: '/user/profile',
     getAllRefCategories: '/ref_asset_category/search_all',
