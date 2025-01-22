@@ -3,7 +3,6 @@ import { AssetService } from '../services/asset/asset.service';
 import { environment } from '../environments/environement';
 import { GeneralPopupComponent } from '../general-popup/general-popup.component';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 
 interface FormData {
   mabAssetId: string;
@@ -44,7 +43,6 @@ export class AssetAssignComponent implements OnInit {
   constructor(
     private assetService: AssetService,
     private dialog: MatDialog,
-    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -80,7 +78,7 @@ export class AssetAssignComponent implements OnInit {
               mabAssetId: item.mabAssetId || '',
               assetSerialNo: item.assetSerialNo || '',
               wifiAccess: item.wifiAccess ? 'Yes' : 'No',  // Convert to 1 for Yes, 0 for No
-            gpAccess: item.gpAccess ? 'Yes' : 'No',      // Convert to 1 for Yes, 0 for No
+              gpAccess: item.gpAccess ? 'Yes' : 'No',      // Convert to 1 for Yes, 0 for No
               categoryId: item.categoryId || null,
               categoryName: item.categoryName || '',
               remarks: item.remarks || '',
@@ -118,7 +116,7 @@ export class AssetAssignComponent implements OnInit {
     this.formData.selectedAsset = '';
     let endpoint = '';
     switch (categoryName.toLowerCase()) {
-      case 'laptop':
+      case 'laptop/desktop':
         endpoint = environment.getAllRefLaptops;
         break;
       case 'hard disk drive external':
@@ -145,11 +143,14 @@ export class AssetAssignComponent implements OnInit {
       next: (response) => {
         if (response?.data && Array.isArray(response.data)) {
           this.assets = response.data.map((item: any) => {
-            // Use 'Model' for laptops and create a consistent label for assets
-            const label =
-              this.selectedCategory?.toLowerCase() === 'laptop'
-                ? item['Model']
-                : item['Brand Name'];
+            // Extract additional details from assetDetails
+            const detailsToDisplay = Object.entries(item)
+              .filter(([key, value]) => key !== 'refId' && value) // Exclude 'refId' and empty values
+              .map(([key, value]) => `${value}`) // Convert each value to a string
+              .join(' - '); // Join the details with a dash
+
+            // Create the label with additional details
+            const label =`${detailsToDisplay}`;
 
             return {
               label: label, // Label to display in the dropdown
@@ -159,6 +160,7 @@ export class AssetAssignComponent implements OnInit {
               },
             };
           });
+
         } else {
           console.error('Unexpected API response format:', response);
           this.assets = [];
@@ -205,7 +207,7 @@ export class AssetAssignComponent implements OnInit {
       for (let i = 0; i < 10; i++) {
         if (keys[i] && keys[i] !== 'refId') {  // Skip 'refId' field
           assetDetails[`spec${specIndex}`] = this.formData.assetDetails[keys[i]] || null;
-          specIndex++; 
+          specIndex++;
         }
       }
 
