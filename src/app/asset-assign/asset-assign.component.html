@@ -13,7 +13,7 @@
         <form class="form-container">
             <!-- Asset Dropdown -->
             <div class="form-row full-row">
-                <label>Asset</label>
+                <label>Asset<span class="required">*</span></label>
                 <select [(ngModel)]="formData.selectedAsset" name="selectedAsset"
                     (change)="onAssetChange(formData.selectedAsset)">
                     <option value="">None</option>

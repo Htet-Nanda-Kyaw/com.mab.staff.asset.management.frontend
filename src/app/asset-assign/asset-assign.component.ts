@@ -32,6 +32,7 @@ export class AssetAssignComponent implements OnInit {
   masterDetailKeys: string[] = [];
   pageSize = 5; // Defines the page size for assets
   dataSource: FormData[] = []; // Data source for the table
+  isExistingAsset: boolean = true;
 
   // Default form data initialization
   formData: FormData = {
@@ -47,7 +48,7 @@ export class AssetAssignComponent implements OnInit {
   constructor(
     private assetService: AssetService, // Inject asset service for API calls
     private dialog: MatDialog // Inject MatDialog for popups
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.fetchCategories(); // Fetch asset categories when the component is initialized
@@ -56,9 +57,13 @@ export class AssetAssignComponent implements OnInit {
 
   // Fetch existing assets that are already assigned
   fetchExistingAssets(): void {
+    this.isExistingAsset = true;
     this.assetService.getAssignedAssets().subscribe({
       next: (response) => {
         if (response?.data && Array.isArray(response.data)) {
+          if (response.data.length === 0) {
+            this.isExistingAsset = false;
+          }
           this.tempList = response.data.map((item: any) => {
             // Map asset details from response to required format
             const assetDetails: any = {
@@ -191,7 +196,7 @@ export class AssetAssignComponent implements OnInit {
 
   // Add form data to the temporary list of assets
   addToList(): void {
-    if (this.formData.mabAssetId && this.formData.assetSerialNo) {
+    if (this.formData.mabAssetId && this.formData.assetSerialNo && this.formData.selectedAsset) {
       const categoryInfo = {
         categoryName: this.selectedCategory,
         categoryId:
@@ -254,40 +259,46 @@ export class AssetAssignComponent implements OnInit {
 
   // Save the list of assets to the server
   saveAssets(): void {
-    const payload = this.tempList.map((item) => {
-      const assetDetails = item.assetDetails || {};
-      return {
-        userId: null, // Set dynamically if applicable
-        categoryId: item.categoryId,
-        categoryName: item.categoryName,
-        mabAssetId: item.mabAssetId,
-        assetSerialNo: item.assetSerialNo,
-        isWifiAccess: item.wifiAccess === 'Yes',
-        isGpAccess: item.gpAccess === 'Yes',
-        spec1: assetDetails.spec1 || null,
-        spec2: assetDetails.spec2 || null,
-        spec3: assetDetails.spec3 || null,
-        spec4: assetDetails.spec4 || null,
-        spec5: assetDetails.spec5 || null,
-        spec6: assetDetails.spec6 || null,
-        spec7: assetDetails.spec7 || null,
-        spec8: assetDetails.spec8 || null,
-        spec9: assetDetails.spec9 || null,
-        spec10: assetDetails.spec10 || null,
-        remarks: item.remarks || '',
-      };
-    });
-    this.assetService.saveAssignedAssets({ assets: payload }).subscribe({
-      next: (response) => {
-        this.tempList = [];
-        this.fetchExistingAssets(); // Re-fetch the assets after saving
-        this.dialog.open(GeneralPopupComponent, {
-          data: { header: 'Info', message: response.message },
-        });
-      },
-      error: (error) => {
-        console.error('Error saving assets:', error);
-      },
-    });
+    if (this.isExistingAsset || this.tempList.length !== 0) {
+      const payload = this.tempList.map((item) => {
+        const assetDetails = item.assetDetails || {};
+        return {
+          userId: null, // Set dynamically if applicable
+          categoryId: item.categoryId,
+          categoryName: item.categoryName,
+          mabAssetId: item.mabAssetId,
+          assetSerialNo: item.assetSerialNo,
+          isWifiAccess: item.wifiAccess === 'Yes',
+          isGpAccess: item.gpAccess === 'Yes',
+          spec1: assetDetails.spec1 || null,
+          spec2: assetDetails.spec2 || null,
+          spec3: assetDetails.spec3 || null,
+          spec4: assetDetails.spec4 || null,
+          spec5: assetDetails.spec5 || null,
+          spec6: assetDetails.spec6 || null,
+          spec7: assetDetails.spec7 || null,
+          spec8: assetDetails.spec8 || null,
+          spec9: assetDetails.spec9 || null,
+          spec10: assetDetails.spec10 || null,
+          remarks: item.remarks || '',
+        };
+      });
+      this.assetService.saveAssignedAssets({ assets: payload }).subscribe({
+        next: (response) => {
+          this.tempList = [];
+          this.fetchExistingAssets(); // Re-fetch the assets after saving
+          this.dialog.open(GeneralPopupComponent, {
+            data: { header: 'Info', message: response.message },
+          });
+        },
+        error: (error) => {
+          console.error('Error saving assets:', error);
+        },
+      });
+    }else{
+      this.dialog.open(GeneralPopupComponent, {
+        data: { header: 'Info', message: "Please add one or more asset" },
+      });
+    }
   }
 }
