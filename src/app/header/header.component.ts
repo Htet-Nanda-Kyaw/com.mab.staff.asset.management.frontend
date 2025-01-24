@@ -48,13 +48,10 @@ export class HeaderComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        console.log('Confirmed');
         if (typeof window !== 'undefined' && window.localStorage) {
           localStorage.clear();
         }
         this.router.navigate(['/login']);
-      } else {
-        console.log('Cancelled');
       }
     });
   }

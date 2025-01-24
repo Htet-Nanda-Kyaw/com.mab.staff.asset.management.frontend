@@ -17,7 +17,6 @@ export class ExportPageComponent {
 
         this.exportService.getAllAssets().subscribe({
             next:(response) => {
-              console.log(response);
                 if (response && Array.isArray(response.data)) {
                     this.generateExcel(response.data);
                 } else {

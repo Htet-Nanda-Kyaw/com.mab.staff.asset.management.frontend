@@ -15,7 +15,6 @@ export class GeneralPopupComponent {
   ) { }
   
   confirmAction(): void {
-    console.log('Confirmation action triggered');
     this.dialogRef.close(true); // Close the dialog and pass a true value for confirmation
   }
 }

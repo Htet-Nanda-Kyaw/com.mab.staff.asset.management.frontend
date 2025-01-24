@@ -40,7 +40,6 @@ export class LoginComponent {
         localStorage.setItem('jwtToken', response.token);
         this.profileService.getProfile().subscribe({
           next: (profile) => {
-            console.log('Profile:', profile);
             localStorage.setItem('username', profile.data.username);
             if (!profile.data.realUserName) {
               localStorage.setItem('realUsername', '-');
@@ -50,8 +49,6 @@ export class LoginComponent {
             }
             localStorage.setItem('role', profile.data.role);
             localStorage.setItem('firstLogin', profile.data.firstLogin);
-            console.log(profile.data);
-            console.log(localStorage.getItem('realUsername'));
             if (profile.data.firstLogin === false) {
               this.router.navigate(['/layout']);
             } else {

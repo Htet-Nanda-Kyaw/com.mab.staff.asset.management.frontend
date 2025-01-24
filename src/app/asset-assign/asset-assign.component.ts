@@ -277,7 +277,6 @@ export class AssetAssignComponent implements OnInit {
         remarks: item.remarks || '',
       };
     });
-
     this.assetService.saveAssignedAssets({ assets: payload }).subscribe({
       next: (response) => {
         this.tempList = [];

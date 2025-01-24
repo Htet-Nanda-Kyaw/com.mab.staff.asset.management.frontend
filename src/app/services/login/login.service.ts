@@ -15,7 +15,6 @@ export class LoginService {
   endPoint: string = environment.loginURL;
   constructor(private apiService: ApiService) { }
   login(data: any): Observable<LoginResponse> {
-    console.log(data);
     return this.apiService.post(this.endPoint, data, false);
   }
 }

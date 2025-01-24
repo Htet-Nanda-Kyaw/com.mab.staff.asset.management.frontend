@@ -19,7 +19,6 @@ export class ApiService {
 
     if (requiresAuth) {
       const token = localStorage.getItem('jwtToken');
-      console.log('Token:', token);  // Log the token for debugging
       if (token && token.trim() !== '') {
         headers = headers.set('Authorization', `Bearer ${token}`);
       } else {

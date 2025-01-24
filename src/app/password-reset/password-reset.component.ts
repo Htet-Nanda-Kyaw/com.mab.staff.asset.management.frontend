@@ -49,7 +49,9 @@ export class PasswordResetComponent implements OnInit {
         },
       });
     } else {
-      console.log('Form is not valid');
+      this.dialog.open(GeneralPopupComponent, {
+        data: { header: 'Error', message: 'Form is not valid' },
+      });
     }
   }
 }
