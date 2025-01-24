@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class HeaderComponent implements OnInit {
   username: string | null = null;
+  userRealname: string | null = null;
   role: string | null = null;
   isDropdownOpen: boolean = false;
 
@@ -25,6 +26,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     if (typeof window !== 'undefined' && window.localStorage) {
       this.username = localStorage.getItem('username');
+      this.userRealname = localStorage.getItem('realUsername');
       this.role = localStorage.getItem('role');
     }
   }

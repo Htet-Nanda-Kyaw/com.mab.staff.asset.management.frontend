@@ -41,12 +41,20 @@ export class LoginComponent {
         this.profileService.getProfile().subscribe({
           next: (profile) => {
             console.log('Profile:', profile);
+            localStorage.setItem('username', profile.data.username);
+            if (!profile.data.realUserName) {
+              localStorage.setItem('realUsername', '-');
+            }
+            else {
+              localStorage.setItem('realUsername', profile.data.realUserName);
+            }
             localStorage.setItem('role', profile.data.role);
             localStorage.setItem('firstLogin', profile.data.firstLogin);
-            localStorage.setItem('username', this.username);
+            console.log(profile.data);
+            console.log(localStorage.getItem('realUsername'));
             if (profile.data.firstLogin === false) {
               this.router.navigate(['/layout']);
-            }else{
+            } else {
               this.router.navigate(['/password-reset']);
             }
           },

@@ -20,32 +20,27 @@ export class PasswordResetComponent implements OnInit {
     private profileService: ProfileService,
     private dialog: MatDialog,
   ) {
-    // Initialize the formGroup here without oldPassword field
     this.passwordForm = this.fb.group({
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
-  ngOnInit(): void {
-    // If needed, you can perform any additional logic during initialization
-  }
+  ngOnInit(): void {}
 
-  // Method to check if the form is valid before calling the API
-  onSubmit() {
+  onSubmit(): void {
     if (this.passwordForm.valid) {
       const { newPassword } = this.passwordForm.value;
       const data = {
-        username:  localStorage.getItem('username'),
+        username: localStorage.getItem('username'),
         password: newPassword,
       };
+
       this.profileService.updatePassword(data).subscribe({
         next: (response) => {
-          console.log(response);
-          const dialogRef = this.dialog.open(GeneralPopupComponent, {
+          this.dialog.open(GeneralPopupComponent, {
             data: { header: 'Confirm', message: response.message },
-          });
-          dialogRef.afterClosed().subscribe((result) => {
+          }).afterClosed().subscribe(() => {
             this.router.navigate(['/layout']);
           });
         },

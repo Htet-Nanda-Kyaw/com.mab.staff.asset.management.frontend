@@ -4,16 +4,17 @@ import { environment } from '../environments/environement';
 import { GeneralPopupComponent } from '../general-popup/general-popup.component';
 import { MatDialog } from '@angular/material/dialog';
 
+// Interface defining the structure of the form data.
 interface FormData {
   mabAssetId: string;
   assetSerialNo: string;
   wifiAccess: string;
   gpAccess: string;
   selectedAsset?: any;
-  assetDetails?: any; // Store selected asset details here
-  remarks?: string; // Add remarks field
-  categoryId: number | null;  // Allow null for categoryId
-  categoryName: string | null;  // Allow null for categoryName
+  assetDetails?: any;
+  remarks?: string;
+  categoryId: number | null;
+  categoryName: string | null;
 }
 
 @Component({
@@ -23,14 +24,16 @@ interface FormData {
   standalone: false,
 })
 export class AssetAssignComponent implements OnInit {
+  // Arrays to store asset categories, assets, and temporary asset list.
   categories: { categoryId: number; categoryName: string }[] = [];
   assets: any[] = [];
   selectedCategory: string | null = null;
   tempList: FormData[] = [];
   masterDetailKeys: string[] = [];
-  pageSize = 5;
-  dataSource: FormData[] = [];
+  pageSize = 5; // Defines the page size for assets
+  dataSource: FormData[] = []; // Data source for the table
 
+  // Default form data initialization
   formData: FormData = {
     mabAssetId: '',
     assetSerialNo: '',
@@ -38,28 +41,26 @@ export class AssetAssignComponent implements OnInit {
     gpAccess: 'No',
     remarks: '',
     categoryId: null,
-    categoryName: null
+    categoryName: null,
   };
+
   constructor(
-    private assetService: AssetService,
-    private dialog: MatDialog,
-  ) { }
+    private assetService: AssetService, // Inject asset service for API calls
+    private dialog: MatDialog // Inject MatDialog for popups
+  ) {}
 
   ngOnInit(): void {
-    this.fetchCategories();
-    this.fetchExistingAssets();
+    this.fetchCategories(); // Fetch asset categories when the component is initialized
+    this.fetchExistingAssets(); // Fetch already assigned assets on init
   }
 
+  // Fetch existing assets that are already assigned
   fetchExistingAssets(): void {
-    const userId = 2; // Replace with the actual userId (e.g., from a service or token)
-
     this.assetService.getAssignedAssets().subscribe({
       next: (response) => {
-        console.log('Existing assets:', response);
-
         if (response?.data && Array.isArray(response.data)) {
           this.tempList = response.data.map((item: any) => {
-            // Construct assetDetails object dynamically for the UI
+            // Map asset details from response to required format
             const assetDetails: any = {
               spec1: item.spec1,
               spec2: item.spec2,
@@ -72,22 +73,18 @@ export class AssetAssignComponent implements OnInit {
               spec9: item.spec9,
               spec10: item.spec10,
             };
-
-            // Return a properly formatted item for tempList
             return {
               mabAssetId: item.mabAssetId || '',
               assetSerialNo: item.assetSerialNo || '',
-              wifiAccess: item.wifiAccess ? 'Yes' : 'No',  // Convert to 1 for Yes, 0 for No
-              gpAccess: item.gpAccess ? 'Yes' : 'No',      // Convert to 1 for Yes, 0 for No
+              wifiAccess: item.wifiAccess ? 'Yes' : 'No',
+              gpAccess: item.gpAccess ? 'Yes' : 'No',
               categoryId: item.categoryId || null,
               categoryName: item.categoryName || '',
               remarks: item.remarks || '',
               assetDetails: assetDetails,
             };
           });
-
-          // Update master detail keys based on the fetched data
-          this.updateMasterDetailKeys();
+          this.updateMasterDetailKeys(); // Update master-detail keys
         } else {
           console.error('Unexpected API response format:', response);
         }
@@ -98,11 +95,11 @@ export class AssetAssignComponent implements OnInit {
     });
   }
 
+  // Fetch categories of assets from the API
   fetchCategories(): void {
     this.assetService.getRefCategories().subscribe({
       next: (response) => {
-        console.log(response);
-        this.categories = response.data;
+        this.categories = response.data; // Store the categories in the component
       },
       error: (error) => {
         console.error('Error fetching categories:', error);
@@ -110,11 +107,14 @@ export class AssetAssignComponent implements OnInit {
     });
   }
 
+  // Update the form based on the selected asset category
   updateForm(categoryName: string): void {
-    this.selectedCategory = categoryName;
-    this.formData.assetDetails = null;
-    this.formData.selectedAsset = '';
-    let endpoint = '';
+    this.selectedCategory = categoryName; // Store selected category name
+    this.formData.assetDetails = null; // Reset asset details
+    this.formData.selectedAsset = ''; // Reset selected asset
+    let endpoint = ''; // Initialize the endpoint for fetching assets
+
+    // Determine the API endpoint based on selected category
     switch (categoryName.toLowerCase()) {
       case 'laptop/desktop':
         endpoint = environment.getAllRefLaptops;
@@ -139,28 +139,23 @@ export class AssetAssignComponent implements OnInit {
         return;
     }
 
+    // Fetch assets based on the selected category
     this.assetService.getAssets(endpoint).subscribe({
       next: (response) => {
         if (response?.data && Array.isArray(response.data)) {
           this.assets = response.data.map((item: any) => {
-            // Extract additional details from assetDetails
+            // Map asset details to display format
             const detailsToDisplay = Object.entries(item)
-              .filter(([key, value]) => key !== 'refId' && value) // Exclude 'refId' and empty values
-              .map(([key, value]) => `${value}`) // Convert each value to a string
-              .join(' - '); // Join the details with a dash
-
-            // Create the label with additional details
-            const label =`${detailsToDisplay}`;
+              .filter(([key, value]) => key !== 'refId' && value)
+              .map(([key, value]) => `${value}`)
+              .join(' - ');
 
             return {
-              label: label, // Label to display in the dropdown
-              value: item.refId, // Unique identifier for the asset
-              details: {
-                ...item, // Store all asset details here
-              },
+              label: detailsToDisplay,
+              value: item.refId,
+              details: { ...item },
             };
           });
-
         } else {
           console.error('Unexpected API response format:', response);
           this.assets = [];
@@ -173,74 +168,78 @@ export class AssetAssignComponent implements OnInit {
     });
   }
 
+  // Handle the change in selected asset
   onAssetChange(selectedAssetId: any): void {
     if (!selectedAssetId) {
-      this.formData.assetDetails = null; // Clear the details
+      this.formData.assetDetails = null; // Clear asset details if no asset is selected
       return;
     }
-    const selectedAsset = this.assets.find(asset => String(asset.value) === String(selectedAssetId));
-    console.log('Selected Asset:', selectedAsset);
+    const selectedAsset = this.assets.find(
+      (asset) => String(asset.value) === String(selectedAssetId)
+    );
     if (selectedAsset) {
-      this.formData.assetDetails = selectedAsset.details; // Store the selected asset's details
+      this.formData.assetDetails = selectedAsset.details; // Set the asset details
     } else {
-      this.formData.assetDetails = null; // Clear the details if no asset is selected
+      this.formData.assetDetails = null; // Reset asset details if asset not found
     }
   }
 
+  // Extracts object keys for the provided object
   objectKeys(obj: any): string[] {
-    return Object.keys(obj).filter(key => key !== 'refId');
+    return Object.keys(obj).filter((key) => key !== 'refId');
   }
 
-  // Add current form data and asset details to the temporary list
+  // Add form data to the temporary list of assets
   addToList(): void {
     if (this.formData.mabAssetId && this.formData.assetSerialNo) {
-      // Add the selected category info to the form data before pushing it to the list
       const categoryInfo = {
         categoryName: this.selectedCategory,
-        categoryId: this.categories.find((cat) => cat.categoryName === this.selectedCategory)?.categoryId || null,
+        categoryId:
+          this.categories.find((cat) => cat.categoryName === this.selectedCategory)?.categoryId || null,
       };
 
-      // Create an assetDetails object with keys spec1 to spec10
+      // Map asset details to the required structure
       const assetDetails: any = {};
       const keys = Object.keys(this.formData.assetDetails || {});
       let specIndex = 1;
       for (let i = 0; i < 10; i++) {
-        if (keys[i] && keys[i] !== 'refId') {  // Skip 'refId' field
+        if (keys[i] && keys[i] !== 'refId') {
           assetDetails[`spec${specIndex}`] = this.formData.assetDetails[keys[i]] || null;
           specIndex++;
         }
       }
 
-      // Push formData along with category information and assetDetails to tempList
+      // Push the form data to the temporary list
       this.tempList.push({
         ...this.formData,
         ...categoryInfo,
-        assetDetails: assetDetails, // Include dynamically mapped assetDetails
+        assetDetails: assetDetails,
       });
 
-      // Update master detail keys
-      this.updateMasterDetailKeys();
-      // Reset the form
-      this.resetForm();
+      this.updateMasterDetailKeys(); // Update master-detail keys
+      this.resetForm(); // Reset the form after adding
     } else {
-      alert('Please fill in all required fields.');
+      // Show validation popup if required fields are missing
+      this.dialog.open(GeneralPopupComponent, {
+        data: { header: 'Validation', message: 'Please fill in all required fields.' },
+      });
     }
   }
 
-
+  // Update master-detail keys based on the temporary list of assets
   updateMasterDetailKeys(): void {
     const allKeys = this.tempList
       .map((item) => Object.keys(item.assetDetails || {}))
       .flat();
-    this.masterDetailKeys = Array.from(new Set(allKeys)).filter((key) => key !== 'refId'); // Exclude refId
+    this.masterDetailKeys = Array.from(new Set(allKeys)).filter((key) => key !== 'refId');
   }
 
-  // Remove an item from the temporary list
+  // Remove an asset from the temporary list
   removeFromList(index: number): void {
     this.tempList.splice(index, 1);
   }
 
-  // Reset the form fields
+  // Reset the form to its default values
   resetForm(): void {
     this.formData = {
       mabAssetId: '',
@@ -249,18 +248,16 @@ export class AssetAssignComponent implements OnInit {
       gpAccess: 'No',
       remarks: '',
       categoryId: null,
-      categoryName: null
+      categoryName: null,
     };
   }
 
-  // Save assets to the server
+  // Save the list of assets to the server
   saveAssets(): void {
-    // Create payload according to the AssetTracker backend entity
     const payload = this.tempList.map((item) => {
-      // Flatten assetDetails to spec1 through spec10
       const assetDetails = item.assetDetails || {};
       return {
-        userId: null, // Set this dynamically if applicable
+        userId: null, // Set dynamically if applicable
         categoryId: item.categoryId,
         categoryName: item.categoryName,
         mabAssetId: item.mabAssetId,
@@ -281,15 +278,11 @@ export class AssetAssignComponent implements OnInit {
       };
     });
 
-    console.log('Payload:', payload);
-
-    // Send payload to the backend
     this.assetService.saveAssignedAssets({ assets: payload }).subscribe({
       next: (response) => {
-        console.log(response);
-        this.tempList = []; // Clear tempList after saving
-        this.fetchExistingAssets();
-        const dialogRef = this.dialog.open(GeneralPopupComponent, {
+        this.tempList = [];
+        this.fetchExistingAssets(); // Re-fetch the assets after saving
+        this.dialog.open(GeneralPopupComponent, {
           data: { header: 'Info', message: response.message },
         });
       },
