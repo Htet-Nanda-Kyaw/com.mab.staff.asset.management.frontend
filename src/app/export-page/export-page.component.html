@@ -1,4 +1,12 @@
 <div class="export-page">
-    <h2>Export Asset Data</h2>
-    <button (click)="exportAssets()" class="export-button">Export to Excel</button>
+    <div class="export-grid">
+        <div class="export-item">
+            <h2>Export Asset Data</h2>
+            <button (click)="exportAssets()" class="export-button">Export to Excel</button>
+        </div>
+        <div class="export-item">
+            <h2>Export Users Without Asset Data</h2>
+            <button (click)="exportUsersWithoutAssets()" class="export-button">Export to Excel</button>
+        </div>
+    </div>
 </div>

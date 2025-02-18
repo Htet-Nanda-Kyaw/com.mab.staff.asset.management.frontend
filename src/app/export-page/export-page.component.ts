@@ -18,7 +18,7 @@ export class ExportPageComponent {
         this.exportService.getAllAssets().subscribe({
             next:(response) => {
                 if (response && Array.isArray(response.data)) {
-                    this.generateExcel(response.data);
+                    this.generateExcel(response.data,'Assets','AssetData');
                 } else {
                     console.error('Invalid response from API');
                 }
@@ -29,9 +29,26 @@ export class ExportPageComponent {
     });
     }
 
-    private generateExcel(data: any[]) {
+    exportUsersWithoutAssets() {
+
+        this.exportService.getAllUsersWithoutAssets().subscribe({
+            next:(response) => {
+                if (response && Array.isArray(response.data)) {
+                    console.log(response.data);
+                    this.generateExcel(response.data,'Users','UserData');
+                } else {
+                    console.error('Invalid response from API');
+                }
+            },
+            error:(error) => {
+                console.error('Error fetching asset data:', error);
+            }
+    });
+    }
+
+    private generateExcel(data: any[],workBookName: string, prefixName: string) {
         const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet('Assets');
+        const worksheet = workbook.addWorksheet(workBookName);
 
         // Define headers based on object keys
         const headers = Object.keys(data[0] || {});
@@ -45,7 +62,7 @@ export class ExportPageComponent {
         // Save the workbook
         workbook.xlsx.writeBuffer().then((buffer) => {
             const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-            saveAs(blob, `AssetData_${new Date().toISOString()}.xlsx`);
+            saveAs(blob, `${prefixName}_${new Date().toISOString()}.xlsx`);
         });
     }
 }

@@ -1,11 +1,39 @@
 .export-page {
-    text-align: center;
-    margin-top: 50px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+
+    @media (max-width: 768px) {
+        margin: 20px auto; // Reduce margins for smaller screens
+        padding: 20px; // Reduce padding for smaller screens
+    }
 
     h2 {
         font-size: 24px;
         color: #333;
         margin-bottom: 20px;
+
+        @media (max-width: 768px) {
+            font-size: 20px; // Reduce font size for smaller screens
+        }
+    }
+
+    .export-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); // Two columns for side-by-side layout
+        gap: 20px; // Space between grid items
+        justify-content: center; // Center the grid horizontally
+
+        @media (max-width: 768px) {
+            grid-template-columns: 1fr; // Single column for smaller screens
+        }
+    }
+
+    .export-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center; // Center items vertically and horizontally
     }
 
     .export-button {
@@ -20,6 +48,11 @@
 
         &:hover {
             background-color: #0056b3;
+        }
+
+        @media (max-width: 768px) {
+            font-size: 14px; // Reduce button font size for smaller screens
+            padding: 8px 16px; // Reduce padding for smaller screens
         }
     }
 }
