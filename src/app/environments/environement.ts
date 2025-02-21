@@ -7,6 +7,7 @@ export const environment = {
     getAllRefCategories: '/ref_asset_category/search_all',
     saveAssets: '/asset/save',
     getAllRefLaptops: '/ref_laptop/search_all',
+    getAllRefDesktops: '/ref_desktop/search_all',
     getAllRefMonitors: '/ref_external_monitor/search_all',
     getAllRefHDD: '/ref_hard_disk/search_all',
     getAllRefPrinters:'/ref_printer/search_all',

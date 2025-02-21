@@ -121,7 +121,7 @@ export class AssetAssignComponent implements OnInit {
 
     // Determine the API endpoint based on selected category
     switch (categoryName.toLowerCase()) {
-      case 'laptop/desktop':
+      case 'laptop':
         endpoint = environment.getAllRefLaptops;
         break;
       case 'hard disk drive external':
@@ -138,6 +138,9 @@ export class AssetAssignComponent implements OnInit {
         break;
       case 'ups':
         endpoint = environment.getAllRefUPS;
+        break;
+      case 'desktop':
+        endpoint = environment.getAllRefDesktops;
         break;
       default:
         console.error('Unknown category selected.');
@@ -295,7 +298,7 @@ export class AssetAssignComponent implements OnInit {
           console.error('Error saving assets:', error);
         },
       });
-    }else{
+    } else {
       this.dialog.open(GeneralPopupComponent, {
         data: { header: 'Info', message: "Please add one or more asset" },
       });
