@@ -29,26 +29,30 @@ export class LoginComponent {
           : 'Password is required.';
       return;
     }
-
+  
     const data = {
       username: this.username,
       password: this.password,
     };
-
+  
     this.loginService.login(data).subscribe({
       next: (response) => {
         localStorage.setItem('jwtToken', response.token);
+  
         this.profileService.getProfile().subscribe({
           next: (profile) => {
+            console.log(profile);
             localStorage.setItem('username', profile.data.username);
-            if (!profile.data.realUserName) {
-              localStorage.setItem('realUsername', '-');
-            }
-            else {
-              localStorage.setItem('realUsername', profile.data.realUserName);
-            }
+            localStorage.setItem('realUsername', profile.data.realUserName || '-');
             localStorage.setItem('role', profile.data.role);
             localStorage.setItem('firstLogin', profile.data.firstLogin);
+  
+            // Store the branch list in localStorage
+            if (profile.data.branchList && Array.isArray(profile.data.branchList)) {
+              localStorage.setItem('branchList', JSON.stringify(profile.data.branchList));
+            }
+            console.log(localStorage);
+            // Redirect based on first login status
             if (profile.data.firstLogin === false) {
               this.router.navigate(['/layout']);
             } else {
@@ -65,4 +69,5 @@ export class LoginComponent {
       },
     });
   }
+  
 }

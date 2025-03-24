@@ -54,6 +54,14 @@
                     </select>
                 </div>
 
+                <!-- Branch Row -->
+                <div class="field-group">
+                    <label>Branch<span class="required">*</span></label>
+                    <select [(ngModel)]="formData.branchId" name="selectedBranch">
+                        <option value="">None</option>
+                        <option *ngFor="let branch of branchList" [value]="branch.branchId">{{ branch.branchName }}</option>
+                    </select>
+                </div>
 
                 <!-- Remarks Row -->
                 <div class="field-group">
@@ -79,6 +87,7 @@
                     <th>Asset Serial No</th>
                     <th>Wifi Access</th>
                     <th>GP Access</th>
+                    <th>Branch</th>
                     <th *ngFor="let key of masterDetailKeys">{{ key | titlecase }}</th>
                     <th>Remarks</th>
                     <th>Actions</th>
@@ -95,6 +104,10 @@
                     </td>
                     <td>{{ item.wifiAccess }}</td>
                     <td>{{ item.gpAccess }}</td>
+                    
+                    <td>
+                        {{item.branchId}}
+                    </td>
                     <!-- Render all columns consistently -->
                     <td *ngFor="let key of masterDetailKeys">
                         {{ item.assetDetails?.[key] || '' }}

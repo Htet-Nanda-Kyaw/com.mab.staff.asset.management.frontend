@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 export class SidebarComponent implements OnInit {
   menuItems = [
     { label: 'Asset Assign', link: '/layout/asset-assign', icon: 'fas fa-file-alt', roles: ['ADMIN','USER'] },
+    { label: 'Password Reset', link: '/layout/admin-password-reset', icon: 'fas fa-solid fa-key', roles: ['ADMIN'] },
     { label: 'Export', link: '/layout/export-page', icon: 'fas fa-solid fa-file-export', roles: ['ADMIN'] },
   ];
   userRole: string = '';

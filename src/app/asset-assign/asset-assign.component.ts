@@ -10,6 +10,7 @@ interface FormData {
   assetSerialNo: string;
   wifiAccess: string;
   gpAccess: string;
+  branchId: string
   selectedAsset?: any;
   assetDetails?: any;
   remarks?: string;
@@ -27,6 +28,7 @@ export class AssetAssignComponent implements OnInit {
   // Arrays to store asset categories, assets, and temporary asset list.
   categories: { categoryId: number; categoryName: string }[] = [];
   assets: any[] = [];
+  branchList: { branchId: string; branchName: string }[] = [];
   selectedCategory: string | null = null;
   tempList: FormData[] = [];
   masterDetailKeys: string[] = [];
@@ -40,6 +42,7 @@ export class AssetAssignComponent implements OnInit {
     assetSerialNo: '',
     wifiAccess: 'No',
     gpAccess: 'No',
+    branchId: '',
     remarks: '',
     categoryId: null,
     categoryName: null,
@@ -53,8 +56,20 @@ export class AssetAssignComponent implements OnInit {
   ngOnInit(): void {
     this.fetchCategories(); // Fetch asset categories when the component is initialized
     this.fetchExistingAssets(); // Fetch already assigned assets on init
-  }
+    this.fetchUserBranchList();
 
+  }
+  fetchUserBranchList(): void {
+    const storedBranchList = localStorage.getItem('branchList');
+    if (storedBranchList) {
+      try {
+        this.branchList = JSON.parse(storedBranchList);
+      } catch (error) {
+        console.error('Error parsing branchList from localStorage:', error);
+        this.branchList = [];
+      }
+    }
+  }
   // Fetch existing assets that are already assigned
   fetchExistingAssets(): void {
     this.isExistingAsset = true;
@@ -85,6 +100,7 @@ export class AssetAssignComponent implements OnInit {
               gpAccess: item.gpAccess ? 'Yes' : 'No',
               categoryId: item.categoryId || null,
               categoryName: item.categoryName || '',
+              branchId: item.branchId || '',
               remarks: item.remarks || '',
               assetDetails: assetDetails,
             };
@@ -141,6 +157,9 @@ export class AssetAssignComponent implements OnInit {
         break;
       case 'desktop':
         endpoint = environment.getAllRefDesktops;
+        break;
+      case 'copier':
+        endpoint = environment.getAllRefCopiers;
         break;
       default:
         console.error('Unknown category selected.');
@@ -254,6 +273,7 @@ export class AssetAssignComponent implements OnInit {
       assetSerialNo: '',
       wifiAccess: 'No',
       gpAccess: 'No',
+      branchId: '',
       remarks: '',
       categoryId: null,
       categoryName: null,
@@ -284,8 +304,10 @@ export class AssetAssignComponent implements OnInit {
           spec9: assetDetails.spec9 || null,
           spec10: assetDetails.spec10 || null,
           remarks: item.remarks || '',
+          branchId: item.branchId || '',
         };
       });
+      console.log(payload);
       this.assetService.saveAssignedAssets({ assets: payload }).subscribe({
         next: (response) => {
           this.tempList = [];

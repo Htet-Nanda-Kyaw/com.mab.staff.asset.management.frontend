@@ -16,6 +16,10 @@ export class ProfileService {
   }
   updatePassword(data: any): Observable<any> {
     const endPoint = environment.updatePassword;
-      return this.apiService.post(endPoint,data,true);
-    }
+    return this.apiService.post(endPoint, data, true);
+  }
+  adminUpdatePassword(data: any): Observable<any> {
+    const endPoint = `${environment.adminUpdatePassword}?userName=${data}`;
+    return this.apiService.post(endPoint, null, true);
+  }
 }

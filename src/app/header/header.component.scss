@@ -72,19 +72,52 @@
                 border-radius: 5px;
                 box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
                 padding: 10px;
-                min-width: 150px;
-                z-index: 1000;
                 display: flex;
+                /* Change to flex layout for consistent order */
                 flex-direction: column;
+                /* Stack items vertically */
                 gap: 8px;
+                /* Space between rows */
+                z-index: 1000;
+                width: auto;
+                min-width: 200px;
+                // position: absolute;
+                // top: 100%;
+                // right: 0;
+                // margin-top: 10px;
+                // background-color: white;
+                // border: 1px solid #ddd;
+                // border-radius: 5px;
+                // box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                // padding: 10px;
+                // display: grid;
+                // grid-template-columns: auto;
+                // /* One-column layout */
+                // gap: 8px 15px;
+                // /* Space between rows and columns */
+                // white-space: nowrap;
+                // /* Prevents text from wrapping */
+                // z-index: 1000;
+                // width: auto;
+                // min-width: 200px;
+                // /* Ensures a reasonable default width */
+
 
                 p {
                     margin: 0;
                     font-size: 0.9rem;
                     color: #333;
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-start;
+                    /* Ensure items are left-aligned */
 
                     strong {
                         font-weight: bold;
+                        min-width: 80px;
+                        /* Ensures labels align properly */
+                        text-align: right;
+                        margin-right: 10px;
                     }
                 }
 
@@ -108,6 +141,24 @@
                     border-style: solid;
                     border-color: transparent transparent white transparent;
                     z-index: 2;
+                }
+
+                .branch-label {
+                    display: flex;
+                    /* Align the label and list horizontally */
+                    align-items: flex-start;
+                    /* Center the items vertically */
+                }
+
+                .branch-list {
+                    list-style-type: none;
+                    align-items: flex-start;
+                    /* Removes the bullets */
+                    padding-left: 0;
+                    margin-top: 0;
+                    /* Removes any extra margin */
+                    padding-top: 0;
+                    /* Ensures no extra padding at the top */
                 }
             }
         }

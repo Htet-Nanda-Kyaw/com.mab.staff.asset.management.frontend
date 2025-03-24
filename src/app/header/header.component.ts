@@ -14,6 +14,7 @@ export class HeaderComponent implements OnInit {
   username: string | null = null;
   userRealname: string | null = null;
   role: string | null = null;
+  branchList: { branchId: string; branchName: string }[] = [];
   isDropdownOpen: boolean = false;
 
   constructor(
@@ -28,6 +29,16 @@ export class HeaderComponent implements OnInit {
       this.username = localStorage.getItem('username');
       this.userRealname = localStorage.getItem('realUsername');
       this.role = localStorage.getItem('role');
+
+      const storedBranchList = localStorage.getItem('branchList');
+      if (storedBranchList) {
+        try {
+          this.branchList = JSON.parse(storedBranchList);
+        } catch (error) {
+          console.error('Error parsing branchList from localStorage:', error);
+          this.branchList = [];
+        }
+      }
     }
   }
 

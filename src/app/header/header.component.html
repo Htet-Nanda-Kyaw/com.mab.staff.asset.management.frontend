@@ -1,23 +1,29 @@
 <div class="header">
-    <div class="spacer"></div>
-    <div class="user-info">
-      <div class="user-dropdown">
-        <button 
-          class="user-icon" 
-          (click)="toggleDropdown()" 
-          [class.tooltip-hidden]="isDropdownOpen" 
-          data-tooltip="User Info">
-          <i class="fas fa-user"></i>
-        </button>
-        <div class="dropdown-content" *ngIf="isDropdownOpen">
-          <p><strong>User Name:</strong> {{ username }}</p>
-          <p><strong>Real Name:</strong> {{ userRealname }}</p>
-          <p><strong>Role:</strong> {{ role }}</p>
-        </div>
-      </div>
-      <button class="logout-button" (click)="onLogout()" data-tooltip="Logout">
-        <img src="assets/icons/logout-icon.svg" alt="Logout" />
+  <div class="spacer"></div>
+  <div class="user-info">
+    <div class="user-dropdown">
+      <button class="user-icon" (click)="toggleDropdown()" [class.tooltip-hidden]="isDropdownOpen"
+        data-tooltip="User Info">
+        <i class="fas fa-user"></i>
       </button>
+      <div class="dropdown-content" *ngIf="isDropdownOpen">
+        <p><strong>User Name:</strong> {{ username }}</p>
+        <p><strong>Real Name:</strong> {{ userRealname }}</p>
+        <p><strong>Role:</strong> {{ role }}</p>
+        <p class="branch-label"><strong>Branch:</strong> 
+          <span *ngIf="branchList.length > 0; else noBranches">
+            <ul class="branch-list">
+              <li *ngFor="let branch of branchList">{{ branch.branchId }}</li>
+            </ul>
+          </span>
+          <ng-template #noBranches>
+            <span class="branch-list-empty">-</span>
+          </ng-template>
+        </p>
+      </div>
     </div>
+    <button class="logout-button" (click)="onLogout()" data-tooltip="Logout">
+      <img src="assets/icons/logout-icon.svg" alt="Logout" />
+    </button>
   </div>
-  
+</div>

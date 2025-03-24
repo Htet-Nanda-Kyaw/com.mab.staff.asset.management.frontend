@@ -23,6 +23,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { AssetAssignComponent } from './asset-assign/asset-assign.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ExportPageComponent } from './export-page/export-page.component';
+import { AdminPasswordResetComponent } from './admin-password-reset/admin-password-reset.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { ExportPageComponent } from './export-page/export-page.component';
     GeneralPopupComponent,
     AssetAssignComponent,
     ExportPageComponent,
+    AdminPasswordResetComponent,
   ],
   imports: [
     BrowserModule,
