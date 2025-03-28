@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class SidebarComponent implements OnInit {
   menuItems = [
-    { label: 'Asset Assign', link: '/layout/asset-assign', icon: 'fas fa-file-alt', roles: ['ADMIN','USER'] },
+    { label: 'Asset Assign', link: '/layout/asset-assign', icon: 'fas fa-file-alt', roles: ['ADMIN', 'USER'] },
     { label: 'Password Reset', link: '/layout/admin-password-reset', icon: 'fas fa-solid fa-key', roles: ['ADMIN'] },
     { label: 'Export', link: '/layout/export-page', icon: 'fas fa-solid fa-file-export', roles: ['ADMIN'] },
   ];
@@ -19,7 +19,7 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit(): void {
     // Fetch the role from local storage
-    this.userRole = localStorage.getItem('role')||'';
+    this.userRole = localStorage.getItem('role') || '';
     if (this.userRole) {
       // Filter menu items based on the role
       this.menuItems = this.menuItems.filter(item => item.roles.includes(this.userRole));
@@ -29,4 +29,10 @@ export class SidebarComponent implements OnInit {
   isActive(link: string): boolean {
     return this.router.url === link;
   }
+  isCollapsed = false;
+
+  toggleSidebar() {
+    this.isCollapsed = !this.isCollapsed;
+  }
+
 }
